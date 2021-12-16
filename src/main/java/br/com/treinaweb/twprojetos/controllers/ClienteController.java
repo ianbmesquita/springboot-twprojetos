@@ -36,11 +36,20 @@ public class ClienteController {
         return modelAndView;
     }
 
-    @PostMapping("/cadastrar")
+    @PostMapping({"/cadastrar", "/{id}/editar"})
     public String salvar(Cliente cliente) {
         clienteRepository.save(cliente);
 
         return "redirect:/clientes";
+    }
+
+    @GetMapping("/{id}/editar")
+    public ModelAndView editar(@PathVariable Long id) {
+        ModelAndView modelAndView = new ModelAndView("cliente/formulario");
+
+        modelAndView.addObject("cliente", clienteRepository.getOne(id));
+
+        return modelAndView;
     }
 
     @GetMapping(path="/{id}/excluir")
