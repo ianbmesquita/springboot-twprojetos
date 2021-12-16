@@ -27,6 +27,15 @@ public class ClienteController {
         return modelAndView;
     }
 
+    @GetMapping("/{id}")
+    public ModelAndView detalhes(@PathVariable Long id) {
+        ModelAndView modelAndView = new ModelAndView("cliente/detalhes");
+
+        modelAndView.addObject("cliente", clienteRepository.getOne(id));
+
+        return modelAndView;
+    }
+
     @GetMapping("/cadastrar")
     public ModelAndView cadastrar() {
         ModelAndView modelAndView = new ModelAndView("cliente/formulario");
