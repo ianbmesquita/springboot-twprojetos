@@ -22,7 +22,7 @@
                     <div class="info-box bg-light">
                       <div class="info-box-content">
                         <span class="info-box-text text-center text-muted">Orçamento Estimado</span>
-                        <span class="info-box-number text-center text-muted mb-0" th:text="${#numbers.formatCurrency(projeto.orcamentoEstimado)}">R$ 2.300,00</span>
+                        <span class="info-box-number text-center text-muted mb-0" th:text="${#numbers.formatCurrency(projeto.orcamento)}">R$ 2.300,00</span>
                       </div>
                     </div>
                   </div>
@@ -30,7 +30,7 @@
                     <div class="info-box bg-light">
                       <div class="info-box-content">
                         <span class="info-box-text text-center text-muted">Gasto total</span>
-                        <span class="info-box-number text-center text-muted mb-0" th:text="${#numbers.formatCurrency(projeto.totalGasto)}">R$ 2.000,00</span>
+                        <span class="info-box-number text-center text-muted mb-0" th:text="${#numbers.formatCurrency(projeto.gastos)}">R$ 2.000,00</span>
                       </div>
                     </div>
                   </div>
