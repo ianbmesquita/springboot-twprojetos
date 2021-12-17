@@ -48,4 +48,11 @@ public class CargoController {
 
         return modelAndView;
     }
+
+    @GetMapping("/{id}/excluir")
+    public String excluir(@PathVariable Long id) {
+        cargoRepository.deleteById(id);
+
+        return "redirect:/cargos";
+    }
 }
