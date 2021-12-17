@@ -59,5 +59,12 @@ public class FuncionarioController {
 
         return modelAndView;
     }
+
+    @GetMapping("{id}/excluir")
+    public String excluir(@PathVariable Long id) {
+        funcionarioRepository.deleteById(id);
+
+        return "redirect:/funcionarios";
+    }
     
 }
