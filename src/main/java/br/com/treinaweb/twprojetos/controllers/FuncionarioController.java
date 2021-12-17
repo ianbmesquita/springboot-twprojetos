@@ -44,11 +44,20 @@ public class FuncionarioController {
         return modelAndView;
     }
 
-    @PostMapping("/cadastrar")
+    @PostMapping({"/cadastrar", "/{id}/editar"})
     public String cadastrar(Funcionario funcionario) {
         funcionarioRepository.save(funcionario);
 
         return "redirect:/funcionarios";
+    }
+
+    @GetMapping("/{id}/editar")
+    public ModelAndView editar(@PathVariable Long id) {
+        ModelAndView modelAndView = new ModelAndView("funcionario/formulario");
+        modelAndView.addObject("funcionario", funcionarioRepository.getOne(id));
+        modelAndView.addObject("ufs", UF.values());
+
+        return modelAndView;
     }
     
 }
