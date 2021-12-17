@@ -29,7 +29,7 @@ public class FuncionarioController {
 
     @GetMapping("/{id}")
     public ModelAndView detail(@PathVariable Long id) {
-        ModelAndView modelAndView = new ModelAndView("/funcionario/detail");
+        ModelAndView modelAndView = new ModelAndView("/funcionario/detalhes");
         modelAndView.addObject("funcionario", funcionarioRepository.getOne(id));
 
         return modelAndView;
