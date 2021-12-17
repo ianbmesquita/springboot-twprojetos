@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import br.com.treinaweb.twprojetos.entities.Funcionario;
+import br.com.treinaweb.twprojetos.enums.UF;
 import br.com.treinaweb.twprojetos.repositories.FuncionarioRepository;
 
 @Controller
@@ -30,6 +33,22 @@ public class FuncionarioController {
         modelAndView.addObject("funcionario", funcionarioRepository.getOne(id));
 
         return modelAndView;
+    }
+
+    @GetMapping("/cadastrar")
+    public ModelAndView cadastrar() {
+        ModelAndView modelAndView = new ModelAndView("/funcionario/formulario");
+        modelAndView.addObject("funcionario", new Funcionario());
+        modelAndView.addObject("ufs", UF.values());
+
+        return modelAndView;
+    }
+
+    @PostMapping("/cadastrar")
+    public String cadastrar(Funcionario funcionario) {
+        funcionarioRepository.save(funcionario);
+
+        return "redirect:/funcionarios";
     }
     
 }
