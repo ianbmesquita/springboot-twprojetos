@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import br.com.treinaweb.twprojetos.entities.Funcionario;
 import br.com.treinaweb.twprojetos.enums.UF;
+import br.com.treinaweb.twprojetos.repositories.CargoRepository;
 import br.com.treinaweb.twprojetos.repositories.FuncionarioRepository;
 
 @Controller
@@ -18,6 +19,9 @@ public class FuncionarioController {
 
     @Autowired
     private FuncionarioRepository funcionarioRepository;
+
+    @Autowired
+    private CargoRepository cargoRepository;
 
     @GetMapping
     public ModelAndView home() {
@@ -39,6 +43,7 @@ public class FuncionarioController {
     public ModelAndView cadastrar() {
         ModelAndView modelAndView = new ModelAndView("/funcionario/formulario");
         modelAndView.addObject("funcionario", new Funcionario());
+        modelAndView.addObject("cargos", cargoRepository.findAll());
         modelAndView.addObject("ufs", UF.values());
 
         return modelAndView;
@@ -55,6 +60,7 @@ public class FuncionarioController {
     public ModelAndView editar(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("funcionario/formulario");
         modelAndView.addObject("funcionario", funcionarioRepository.getOne(id));
+        modelAndView.addObject("cargos", cargoRepository.findAll());
         modelAndView.addObject("ufs", UF.values());
 
         return modelAndView;
