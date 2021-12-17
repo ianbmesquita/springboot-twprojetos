@@ -2,7 +2,6 @@ package br.com.treinaweb.twprojetos.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,6 +68,13 @@ public class ProjetoController {
         modelAndView.addObject("funcionarios", funcionarioRepository.findAll());
 
         return modelAndView;
+    }
+
+    @GetMapping("/{id}/excluir")
+    public String excluir(@PathVariable Long id) {
+        projetoRepository.deleteById(id);
+
+        return "redirect:/projetos";
     }
 
 }
