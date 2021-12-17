@@ -53,11 +53,22 @@ public class ProjetoController {
         return modelAndView;
     }
 
-    @PostMapping({"/cadastrar"})
+    @PostMapping({"/cadastrar", "/{id}/editar"})
     public String cadastrar(Projeto projeto) {
         projetoRepository.save(projeto);
 
         return "redirect:/projetos";
+    }
+
+    @GetMapping("/{id}/editar")
+    public ModelAndView editar(@PathVariable Long id) {
+        ModelAndView modelAndView = new ModelAndView("projeto/formulario");
+        modelAndView.addObject("projeto", projetoRepository.getOne(id));
+        modelAndView.addObject("clientes", clienteRepository.findAll());
+        modelAndView.addObject("lideres", funcionarioRepository.findAll());
+        modelAndView.addObject("funcionarios", funcionarioRepository.findAll());
+
+        return modelAndView;
     }
 
 }
