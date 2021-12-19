@@ -12,7 +12,6 @@ import br.com.treinaweb.twprojetos.entities.Funcionario;
 import br.com.treinaweb.twprojetos.enums.UF;
 import br.com.treinaweb.twprojetos.repositories.CargoRepository;
 import br.com.treinaweb.twprojetos.repositories.FuncionarioRepository;
-import br.com.treinaweb.twprojetos.utils.SenhaUtil;
 
 @Controller
 @RequestMapping("/funcionarios")
@@ -50,23 +49,12 @@ public class FuncionarioController {
         return modelAndView;
     }
 
-    @PostMapping("/cadastrar")
+    @PostMapping({"/cadastrar", "/{id}/editar"})
     public String cadastrar(Funcionario funcionario) {
-        funcionario.setSenha(SenhaUtil.encodePassword(funcionario.getSenha()));
         funcionarioRepository.save(funcionario);
 
         return "redirect:/funcionarios";
     }
-
-    @PostMapping("/{id}/editar")
-    public String editar(Funcionario funcionario, @PathVariable Long id) {
-        String senhaAtual = funcionarioRepository.getOne(id).getSenha();
-        funcionario.setSenha(senhaAtual);
-
-        funcionarioRepository.save(funcionario);
-
-        return "redirect:/funcionarios";
-    } 
 
     @GetMapping("/{id}/editar")
     public ModelAndView editar(@PathVariable Long id) {
