@@ -28,6 +28,9 @@ public class Funcionario extends Pessoa {
     @JoinColumn(name = "cargo_id", nullable = false)
     private Cargo cargo;
 
+    @Column(nullable = false)
+    private String senha;
+
     @ManyToMany(mappedBy = "equipe")
     private List<Projeto> projetos;
 
@@ -53,6 +56,14 @@ public class Funcionario extends Pessoa {
 
     public void setCargo(Cargo cargo) {
         this.cargo = cargo;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public List<Projeto> getProjetos() {

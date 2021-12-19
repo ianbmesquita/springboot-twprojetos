@@ -19,7 +19,7 @@
           <!-- form start -->
           <form method="POST" th:object="${funcionario}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            
+
             <div class="card-body">
               <fieldset>
                 <legend>Dados Pessoais</legend>
@@ -143,6 +143,19 @@
                     <div class="form-group">
                       <label for="endereco.complemento">Complemento</label>
                       <input type="text" class="form-control" placeholder="Quadra D" th:field="*{endereco.complemento}">
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend>Dados de Login</legend>
+
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label for="senha">Senha</label>
+                      <input type="password" class="form-control" th:field="*{senha}">
                     </div>
                   </div>
                 </div>
