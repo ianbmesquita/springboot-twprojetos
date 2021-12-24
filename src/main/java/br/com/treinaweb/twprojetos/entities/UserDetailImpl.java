@@ -40,7 +40,7 @@ public class UserDetailImpl implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return funcionario.getDataDemissao() == null;
     }
 
     @Override
