@@ -3,7 +3,10 @@ package br.com.treinaweb.twprojetos.entities;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import br.com.treinaweb.twprojetos.enums.Perfil;
 
 public class UserDetailImpl implements UserDetails {
     private Funcionario funcionario;
@@ -14,7 +17,10 @@ public class UserDetailImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        Perfil perfil = funcionario.getCargo().getNome().equals("Gerente") 
+            ? Perfil.ADMIN : Perfil.USER;
+        
+        return AuthorityUtils.createAuthorityList(perfil.toString());
     }
 
     @Override
