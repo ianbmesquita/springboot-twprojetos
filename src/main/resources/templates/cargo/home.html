@@ -15,7 +15,7 @@
                 <tr>
                   <th>ID</th>
                   <th>Nome</th>
-                  <th>Ações</th>
+                  <th sec:authorize="hasAuthority('ADMIN')">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -24,13 +24,27 @@
                   <td th:text="${cargo.nome}">Desenvolvedor(a) Back End Jr.</td>
                   <td>
                     <div class="btn-group">
-                      <a type="button" data-toggle="popover" data-placement="top" data-content="Editar" data-trigger="hover" class="btn btn-warning" th:href="@{/cargos/{id}/editar (id=${cargo.id})}">
+                      <a 
+                        type="button" 
+                        data-toggle="popover" 
+                        data-placement="top" 
+                        data-content="Editar" 
+                        data-trigger="hover" 
+                        class="btn btn-warning" 
+                        th:href="@{/cargos/{id}/editar (id=${cargo.id})}"
+                        sec:authorize="hasAuthority('ADMIN')"
+                      >
                         <i class="fas fa-edit"></i>
                       </a>
                       <a 
-                        type="button" data-toggle="popover" data-placement="top" 
-                        data-content="Remover" data-trigger="hover" class="btn btn-danger" 
+                        type="button" 
+                        data-toggle="popover" 
+                        data-placement="top" 
+                        data-content="Remover" 
+                        data-trigger="hover" 
+                        class="btn btn-danger" 
                         th:href="@{/cargos/{id}/excluir (id=${cargo.id})}" 
+                        sec:authorize="hasAuthority('ADMIN')"
                         onclick="return confirm('Tem certeza que deseja excluir o cargo?');"
                       >
                         <i class="fas fa-trash"></i>

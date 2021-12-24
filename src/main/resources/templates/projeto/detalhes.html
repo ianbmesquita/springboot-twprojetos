@@ -80,6 +80,7 @@
                   <a
                     class="btn btn-sm btn-warning"
                     th:href="@{/projetos/{id}/editar (id=${projeto.id})}"
+                    sec:authorize="hasAuthority('ADMIN')"
                   >
                     <i class="fas fa-edit"></i>
                     Editar
@@ -87,6 +88,7 @@
                   <a 
                     href="#" class="btn btn-sm btn-danger"
                     th:href="@{/projetos/{id}/excluir (id=${projeto.id})}"
+                    sec:authorize="hasAuthority('ADMIN')"
                     onclick="return confirm('Tem certeza que deseja excluir o projeto?');"
                   >
                     <i class="fas fa-trash"></i>
