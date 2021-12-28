@@ -38,6 +38,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                 .logoutSuccessUrl("/login");
+
+        // A chave deve ser uma string em formato hash para ser o mais seguro possível
+        http.rememberMe()
+                .key("chaveRememberMe");
     }
 
     @Override
