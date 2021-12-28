@@ -5,10 +5,13 @@ import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import br.com.treinaweb.twprojetos.dao.AlterarSenhaDAO;
 import br.com.treinaweb.twprojetos.entities.Funcionario;
 import br.com.treinaweb.twprojetos.repositories.FuncionarioRepository;
+import br.com.treinaweb.twprojetos.utils.SenhaUtil;
 
 @Controller
 public class UsuarioController {
@@ -26,7 +29,20 @@ public class UsuarioController {
 
         Funcionario usuario = funcionarioRepository.findByEmail(principal.getName()).get();
         modelAndView.addObject("usuario", usuario);
+        modelAndView.addObject("alterarSenhaForm", new AlterarSenhaDAO());
 
         return modelAndView;
+    }
+
+    @PostMapping("/alterar-senha")
+    public String alterarSenha(AlterarSenhaDAO form, Principal principal) {
+        Funcionario usuario = funcionarioRepository.findByEmail(principal.getName()).get();
+
+        if(SenhaUtil.matches(form.getSenhaAtual(), usuario.getSenha())) {
+            usuario.setSenha(SenhaUtil.encodePassword(form.getNovaSenha()));
+            funcionarioRepository.save(usuario);
+        }
+
+        return "redirect:/perfil";
     }
 }

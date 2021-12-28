@@ -7,4 +7,9 @@ public class SenhaUtil {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.encode(password);
     }
+
+    public static boolean matches(String password, String hash) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.matches(password, hash);
+    }
 }
