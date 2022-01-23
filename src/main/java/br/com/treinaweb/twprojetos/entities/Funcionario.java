@@ -9,6 +9,10 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -16,18 +20,25 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 @Entity
 public class Funcionario extends Pessoa {
 
+    @NotNull
+    @PastOrPresent
     @Column(name = "data_admissao", nullable = false)
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDate dataAdmissao;
 
+    @PastOrPresent
     @Column(name = "data_demissao")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDate dataDemissao;
 
+    @Valid
+    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cargo_id", nullable = false)
     private Cargo cargo;
 
+    @NotNull
+    @Size(min = 4, max = 255)
     @Column(nullable = false)
     private String senha;
 

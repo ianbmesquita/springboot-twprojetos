@@ -1,7 +1,11 @@
 package br.com.treinaweb.twprojetos.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +55,14 @@ public class FuncionarioController {
     }
 
     @PostMapping("/cadastrar")
-    public String cadastrar(Funcionario funcionario) {
+    public String cadastrar(@Valid Funcionario funcionario, BindingResult resultado, ModelMap modelMap) {
+        if (resultado.hasErrors()) {
+            modelMap.addAttribute("cargos", cargoRepository.findAll());
+            modelMap.addAttribute("ufs", UF.values());
+
+            return "funcionario/formulario";
+        }
+
         funcionario.setSenha(SenhaUtil.encodePassword(funcionario.getSenha()));
         funcionarioRepository.save(funcionario);
 
@@ -59,7 +70,14 @@ public class FuncionarioController {
     }
 
     @PostMapping("/{id}/editar")
-    public String editar(Funcionario funcionario, @PathVariable Long id) {
+    public String editar(@Valid Funcionario funcionario, BindingResult resultado, ModelMap modelMap, @PathVariable Long id) {
+        if (resultado.hasErrors()) {
+            modelMap.addAttribute("cargos", cargoRepository.findAll());
+            modelMap.addAttribute("ufs", UF.values());
+
+            return "funcionario/formulario";
+        }
+
         String senhaAtual = funcionarioRepository.getOne(id).getSenha();
         funcionario.setSenha(senhaAtual);
 
