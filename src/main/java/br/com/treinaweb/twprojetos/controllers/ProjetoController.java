@@ -1,7 +1,11 @@
 package br.com.treinaweb.twprojetos.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,7 +57,15 @@ public class ProjetoController {
     }
 
     @PostMapping({"/cadastrar", "/{id}/editar"})
-    public String cadastrar(Projeto projeto) {
+    public String cadastrar(@Valid Projeto projeto, BindingResult resultado, ModelMap modelMap) {
+        if (resultado.hasErrors()) {
+            modelMap.addAttribute("clientes", clienteRepository.findAll());
+            modelMap.addAttribute("lideres", funcionarioRepository.buscarPorCargo("Gerente"));
+            modelMap.addAttribute("funcionarios", funcionarioRepository.buscarPorCargoExceto("Gerente"));
+
+            return "projeto/formulario";
+        }
+
         projetoRepository.save(projeto);
 
         return "redirect:/projetos";
