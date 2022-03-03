@@ -20,6 +20,7 @@ import br.com.treinaweb.twprojetos.repositories.CargoRepository;
 import br.com.treinaweb.twprojetos.repositories.FuncionarioRepository;
 import br.com.treinaweb.twprojetos.utils.SenhaUtil;
 import br.com.treinaweb.twprojetos.validators.FuncionarioValidator;
+import br.com.treinaweb.twprojetos.validators.PessoaValidator;
 
 @Controller
 @RequestMapping("/funcionarios")
@@ -34,6 +35,7 @@ public class FuncionarioController {
     @InitBinder("funcionario")
     public void initBinder(WebDataBinder binder) {
         binder.addValidators(new FuncionarioValidator(funcionarioRepository));
+        binder.addValidators(new PessoaValidator());
     }
 
     @GetMapping
