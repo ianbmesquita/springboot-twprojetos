@@ -37,7 +37,6 @@ public class Funcionario extends Pessoa {
     @JoinColumn(name = "cargo_id", nullable = false)
     private Cargo cargo;
 
-    @NotNull
     @Size(min = 4, max = 255)
     @Column(nullable = false)
     private String senha;
