@@ -18,7 +18,6 @@ import br.com.treinaweb.twprojetos.entities.Cliente;
 import br.com.treinaweb.twprojetos.enums.UF;
 import br.com.treinaweb.twprojetos.repositories.ClienteRepository;
 import br.com.treinaweb.twprojetos.validators.ClienteValidator;
-import br.com.treinaweb.twprojetos.validators.PessoaValidator;
 
 @Controller
 @RequestMapping("/clientes")
@@ -30,7 +29,6 @@ public class ClienteController {
     @InitBinder("cliente")
     public void initBinder(WebDataBinder binder) {
         binder.addValidators(new ClienteValidator(clienteRepository));
-        binder.addValidators(new PessoaValidator());
     }
 
     @GetMapping
