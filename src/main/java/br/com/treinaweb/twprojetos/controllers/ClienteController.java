@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.treinaweb.twprojetos.entities.Cliente;
-import br.com.treinaweb.twprojetos.enums.UF;
 import br.com.treinaweb.twprojetos.repositories.ClienteRepository;
 import br.com.treinaweb.twprojetos.validators.ClienteValidator;
 
@@ -52,18 +51,14 @@ public class ClienteController {
     @GetMapping("/cadastrar")
     public ModelAndView cadastrar() {
         ModelAndView modelAndView = new ModelAndView("cliente/formulario");
-
         modelAndView.addObject("cliente", new Cliente());
-        modelAndView.addObject("ufs", UF.values());
 
         return modelAndView;
     }
 
     @PostMapping({"/cadastrar", "/{id}/editar"})
     public String salvar(@Valid Cliente cliente, BindingResult resposta, ModelMap modelMap) {
-        if (resposta.hasErrors()) {
-            modelMap.addAttribute("ufs", UF.values());
-            
+        if (resposta.hasErrors()) {            
             return "cliente/formulario";
         }
 
@@ -75,9 +70,7 @@ public class ClienteController {
     @GetMapping("/{id}/editar")
     public ModelAndView editar(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("cliente/formulario");
-
         modelAndView.addObject("cliente", clienteRepository.getOne(id));
-        modelAndView.addObject("ufs", UF.values());
 
         return modelAndView;
     }

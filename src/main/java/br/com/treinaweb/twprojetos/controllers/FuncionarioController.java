@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.treinaweb.twprojetos.entities.Funcionario;
-import br.com.treinaweb.twprojetos.enums.UF;
 import br.com.treinaweb.twprojetos.repositories.CargoRepository;
 import br.com.treinaweb.twprojetos.repositories.FuncionarioRepository;
 import br.com.treinaweb.twprojetos.utils.SenhaUtil;
@@ -57,7 +56,6 @@ public class FuncionarioController {
         ModelAndView modelAndView = new ModelAndView("/funcionario/formulario");
         modelAndView.addObject("funcionario", new Funcionario());
         modelAndView.addObject("cargos", cargoRepository.findAll());
-        modelAndView.addObject("ufs", UF.values());
 
         return modelAndView;
     }
@@ -66,7 +64,6 @@ public class FuncionarioController {
     public String cadastrar(@Valid Funcionario funcionario, BindingResult resultado, ModelMap modelMap) {
         if (resultado.hasErrors()) {
             modelMap.addAttribute("cargos", cargoRepository.findAll());
-            modelMap.addAttribute("ufs", UF.values());
 
             return "funcionario/formulario";
         }
@@ -81,7 +78,6 @@ public class FuncionarioController {
     public String editar(@Valid Funcionario funcionario, BindingResult resultado, ModelMap modelMap, @PathVariable Long id) {
         if (resultado.hasErrors()) {
             modelMap.addAttribute("cargos", cargoRepository.findAll());
-            modelMap.addAttribute("ufs", UF.values());
 
             return "funcionario/formulario";
         }
@@ -99,7 +95,6 @@ public class FuncionarioController {
         ModelAndView modelAndView = new ModelAndView("funcionario/formulario");
         modelAndView.addObject("funcionario", funcionarioRepository.getOne(id));
         modelAndView.addObject("cargos", cargoRepository.findAll());
-        modelAndView.addObject("ufs", UF.values());
 
         return modelAndView;
     }
