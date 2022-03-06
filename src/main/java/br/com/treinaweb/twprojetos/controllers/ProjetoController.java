@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.com.treinaweb.twprojetos.dtos.AlertDTO;
 import br.com.treinaweb.twprojetos.entities.Projeto;
 import br.com.treinaweb.twprojetos.repositories.ClienteRepository;
 import br.com.treinaweb.twprojetos.repositories.FuncionarioRepository;
@@ -57,7 +59,9 @@ public class ProjetoController {
     }
 
     @PostMapping({"/cadastrar", "/{id}/editar"})
-    public String cadastrar(@Valid Projeto projeto, BindingResult resultado, ModelMap modelMap) {
+    public String cadastrar(@Valid Projeto projeto, BindingResult resultado, ModelMap modelMap, RedirectAttributes redirect) {
+        Boolean isEdicao = projeto.getId() != null;
+
         if (resultado.hasErrors()) {
             modelMap.addAttribute("clientes", clienteRepository.findAll());
             modelMap.addAttribute("lideres", funcionarioRepository.buscarPorCargo("Gerente"));
@@ -67,6 +71,12 @@ public class ProjetoController {
         }
 
         projetoRepository.save(projeto);
+
+        if (isEdicao) {
+            redirect.addFlashAttribute("alert", new AlertDTO("Projeto editado com sucesso!", "alert-success"));
+        } else {
+            redirect.addFlashAttribute("alert", new AlertDTO("Projeto cadastrado com sucesso!", "alert-success"));
+        }
 
         return "redirect:/projetos";
     }
@@ -83,8 +93,10 @@ public class ProjetoController {
     }
 
     @GetMapping("/{id}/excluir")
-    public String excluir(@PathVariable Long id) {
+    public String excluir(@PathVariable Long id, RedirectAttributes redirect) {
         projetoRepository.deleteById(id);
+
+        redirect.addFlashAttribute("alert", new AlertDTO("Projeto excluído com sucesso!", "alert-success"));
 
         return "redirect:/projetos";
     }

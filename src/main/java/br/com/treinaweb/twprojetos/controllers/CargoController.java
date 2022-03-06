@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.com.treinaweb.twprojetos.dtos.AlertDTO;
 import br.com.treinaweb.twprojetos.entities.Cargo;
 import br.com.treinaweb.twprojetos.repositories.CargoRepository;
 
@@ -38,12 +40,20 @@ public class CargoController {
     }
 
     @PostMapping({"/cadastrar", "/{id}/editar"})
-    public String cadastrar(@Valid Cargo cargo, BindingResult resposta) {
+    public String cadastrar(@Valid Cargo cargo, BindingResult resposta, RedirectAttributes redirect) {
+        Boolean isEdicao = cargo.getId() != null;
+        
         if (resposta.hasErrors()) {
             return "cargo/formulario";
         }
 
         cargoRepository.save(cargo);
+
+        if (isEdicao) {
+            redirect.addFlashAttribute("alert", new AlertDTO("Cargo editado com sucesso!", "alert-success"));
+        } else {
+            redirect.addFlashAttribute("alert", new AlertDTO("Cargo cadastrado com sucesso!", "alert-success"));
+        }
 
         return "redirect:/cargos";
     }
@@ -57,8 +67,10 @@ public class CargoController {
     }
 
     @GetMapping("/{id}/excluir")
-    public String excluir(@PathVariable Long id) {
+    public String excluir(@PathVariable Long id, RedirectAttributes redirect) {
         cargoRepository.deleteById(id);
+
+        redirect.addFlashAttribute("alert", new AlertDTO("Cargo excluído com sucesso!", "alert-success"));
 
         return "redirect:/cargos";
     }
