@@ -14,19 +14,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.treinaweb.twprojetos.dtos.AlertDTO;
 import br.com.treinaweb.twprojetos.entities.Cargo;
-import br.com.treinaweb.twprojetos.repositories.CargoRepository;
+import br.com.treinaweb.twprojetos.exceptions.CargoPossuiFuncionariosException;
+import br.com.treinaweb.twprojetos.services.CargoService;
 
 @Controller
 @RequestMapping("/cargos")
 public class CargoController {
     
     @Autowired
-    private CargoRepository cargoRepository;
+    private CargoService cargoService;
 
     @GetMapping
     public ModelAndView home() {
         ModelAndView modelAndView = new ModelAndView("/cargo/home");
-        modelAndView.addObject("cargos", cargoRepository.findAll());
+        modelAndView.addObject("cargos", cargoService.findAll());
 
         return modelAndView;
     }
@@ -40,18 +41,18 @@ public class CargoController {
     }
 
     @PostMapping({"/cadastrar", "/{id}/editar"})
-    public String cadastrar(@Valid Cargo cargo, BindingResult resposta, RedirectAttributes redirect) {
+    public String cadastrar(@Valid Cargo cargo, BindingResult resposta, RedirectAttributes redirect, @PathVariable(required = false) Long id) {
         Boolean isEdicao = cargo.getId() != null;
         
         if (resposta.hasErrors()) {
             return "cargo/formulario";
         }
 
-        cargoRepository.save(cargo);
-
         if (isEdicao) {
+            cargoService.update(cargo, id);
             redirect.addFlashAttribute("alert", new AlertDTO("Cargo editado com sucesso!", "alert-success"));
         } else {
+            cargoService.save(cargo);
             redirect.addFlashAttribute("alert", new AlertDTO("Cargo cadastrado com sucesso!", "alert-success"));
         }
 
@@ -61,16 +62,19 @@ public class CargoController {
     @GetMapping("/{id}/editar")
     public ModelAndView editar(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("/cargo/formulario");
-        modelAndView.addObject("cargo", cargoRepository.getOne(id));
+        modelAndView.addObject("cargo", cargoService.findById(id));
 
         return modelAndView;
     }
 
     @GetMapping("/{id}/excluir")
     public String excluir(@PathVariable Long id, RedirectAttributes redirect) {
-        cargoRepository.deleteById(id);
-
-        redirect.addFlashAttribute("alert", new AlertDTO("Cargo excluído com sucesso!", "alert-success"));
+        try {
+            cargoService.deleteById(id);
+            redirect.addFlashAttribute("alert", new AlertDTO("Cargo excluído com sucesso!", "alert-success"));
+        } catch (CargoPossuiFuncionariosException exception) {
+            redirect.addFlashAttribute("alert", new AlertDTO("Cargo não pode ser excluído pois possui funcionário(s) vinculado(s)", "alert-danger"));
+        }
 
         return "redirect:/cargos";
     }
