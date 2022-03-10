@@ -41,7 +41,7 @@ public class Funcionario extends Pessoa {
     @Column(nullable = false)
     private String senha;
 
-    @ManyToMany(mappedBy = "equipe")
+    @ManyToMany(mappedBy = "equipe", fetch = FetchType.EAGER)
     private List<Projeto> projetos;
 
     public LocalDate getDataAdmissao() {
