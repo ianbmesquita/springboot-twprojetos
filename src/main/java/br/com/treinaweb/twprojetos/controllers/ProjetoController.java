@@ -15,26 +15,26 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.treinaweb.twprojetos.dtos.AlertDTO;
 import br.com.treinaweb.twprojetos.entities.Projeto;
-import br.com.treinaweb.twprojetos.repositories.ClienteRepository;
-import br.com.treinaweb.twprojetos.repositories.FuncionarioRepository;
-import br.com.treinaweb.twprojetos.repositories.ProjetoRepository;
+import br.com.treinaweb.twprojetos.services.ClienteService;
+import br.com.treinaweb.twprojetos.services.FuncionarioService;
+import br.com.treinaweb.twprojetos.services.ProjetoService;
 
 @Controller
 @RequestMapping("/projetos")
 public class ProjetoController {
     @Autowired
-    private ProjetoRepository projetoRepository;
+    private ProjetoService projetoService;
 
     @Autowired
-    private FuncionarioRepository funcionarioRepository;
+    private FuncionarioService funcionarioService;
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private ClienteService clienteService;
 
     @GetMapping
     public ModelAndView home() {
         ModelAndView modelAndView = new ModelAndView("projeto/home");
-        modelAndView.addObject("projetos", projetoRepository.findAll());
+        modelAndView.addObject("projetos", projetoService.findAll());
 
         return modelAndView;
     }
@@ -42,7 +42,7 @@ public class ProjetoController {
     @GetMapping("/{id}")
     public ModelAndView detalhes(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("projeto/detalhes");
-        modelAndView.addObject("projeto", projetoRepository.getOne(id));
+        modelAndView.addObject("projeto", projetoService.findById(id));
 
         return modelAndView;
     }
@@ -51,30 +51,28 @@ public class ProjetoController {
     public ModelAndView cadastrar() {
         ModelAndView modelAndView = new ModelAndView("projeto/formulario");
         modelAndView.addObject("projeto", new Projeto());
-        modelAndView.addObject("clientes", clienteRepository.findAll());
-        modelAndView.addObject("lideres", funcionarioRepository.buscarPorCargo("Gerente"));
-        modelAndView.addObject("funcionarios", funcionarioRepository.buscarPorCargoExceto("Gerente"));
+        popularFormulario(modelAndView);
 
         return modelAndView;
     }
 
     @PostMapping({"/cadastrar", "/{id}/editar"})
-    public String cadastrar(@Valid Projeto projeto, BindingResult resultado, ModelMap modelMap, RedirectAttributes redirect) {
+    public String cadastrar(@Valid Projeto projeto, BindingResult resultado, ModelMap modelMap, 
+        RedirectAttributes redirect, @PathVariable(required = false) Long id) {
+
         Boolean isEdicao = projeto.getId() != null;
 
         if (resultado.hasErrors()) {
-            modelMap.addAttribute("clientes", clienteRepository.findAll());
-            modelMap.addAttribute("lideres", funcionarioRepository.buscarPorCargo("Gerente"));
-            modelMap.addAttribute("funcionarios", funcionarioRepository.buscarPorCargoExceto("Gerente"));
+            popularFormulario(modelMap);
 
             return "projeto/formulario";
         }
-
-        projetoRepository.save(projeto);
-
+       
         if (isEdicao) {
+            projetoService.update(projeto, id);
             redirect.addFlashAttribute("alert", new AlertDTO("Projeto editado com sucesso!", "alert-success"));
         } else {
+            projetoService.save(projeto);
             redirect.addFlashAttribute("alert", new AlertDTO("Projeto cadastrado com sucesso!", "alert-success"));
         }
 
@@ -84,21 +82,31 @@ public class ProjetoController {
     @GetMapping("/{id}/editar")
     public ModelAndView editar(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("projeto/formulario");
-        modelAndView.addObject("projeto", projetoRepository.getOne(id));
-        modelAndView.addObject("clientes", clienteRepository.findAll());
-        modelAndView.addObject("lideres", funcionarioRepository.buscarPorCargo("Gerente"));
-        modelAndView.addObject("funcionarios", funcionarioRepository.buscarPorCargoExceto("Gerente"));
+        modelAndView.addObject("projeto", projetoService.findById(id));
+        popularFormulario(modelAndView);
 
         return modelAndView;
     }
 
     @GetMapping("/{id}/excluir")
     public String excluir(@PathVariable Long id, RedirectAttributes redirect) {
-        projetoRepository.deleteById(id);
+        projetoService.deleteById(id);
 
         redirect.addFlashAttribute("alert", new AlertDTO("Projeto excluído com sucesso!", "alert-success"));
 
         return "redirect:/projetos";
+    }
+
+    private void popularFormulario(ModelAndView modelAndView) {
+        modelAndView.addObject("clientes", clienteService.findAll());
+        modelAndView.addObject("lideres", funcionarioService.buscarLideres());
+        modelAndView.addObject("funcionarios", funcionarioService.buscarEquipe());
+    }
+
+    private void popularFormulario(ModelMap modelMap) {
+        modelMap.addAttribute("clientes", clienteService.findAll());
+        modelMap.addAttribute("lideres", funcionarioService.buscarLideres());
+        modelMap.addAttribute("funcionarios", funcionarioService.buscarEquipe());
     }
 
 }

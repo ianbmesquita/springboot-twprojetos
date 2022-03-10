@@ -30,6 +30,14 @@ public class FuncionarioService {
         return funcionarioRepository.findById(id)
             .orElseThrow(() -> new FuncionarioNaoEncontradoException(id));
     }
+    
+    public List<Funcionario> buscarLideres() {
+        return funcionarioRepository.buscarPorCargo("Gerente");
+    }
+
+    public List<Funcionario> buscarEquipe() {
+        return funcionarioRepository.buscarPorCargoExceto("Gerente");
+    }
 
     public Funcionario save(Funcionario funcionario) {
         funcionario.setSenha(SenhaUtil.encodePassword(funcionario.getSenha()));
